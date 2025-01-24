@@ -1,0 +1,44 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load election data from a CSV file
+file_path = "election_results.csv"  # Replace with your file path
+data = pd.read_csv(file_path)
+
+# Display basic information about the data
+print("Dataset Overview:")
+print(data.head())
+
+# Total votes per candidate
+candidate_votes = data.groupby("Candidate")["Votes"].sum()
+print("\nTotal Votes per Candidate:")
+print(candidate_votes)
+
+# Plot total votes per candidate
+candidate_votes.plot(kind="bar", title="Votes per Candidate", color="skyblue", figsize=(8, 5))
+plt.xlabel("Candidate")
+plt.ylabel("Votes")
+plt.show()
+
+# Regional analysis
+region_votes = data.groupby("Region")["Votes"].sum()
+print("\nTotal Votes by Region:")
+print(region_votes)
+
+# Plot regional votes
+region_votes.plot(kind="pie", title="Votes by Region", autopct="%1.1f%%", figsize=(6, 6))
+plt.ylabel("")  # Remove y-axis label
+plt.show()
+
+# Calculate voter turnout percentage (if data includes total registered voters)
+if "Registered Voters" in data.columns:
+    total_votes = data["Votes"].sum()
+    total_registered_voters = data["Registered Voters"].sum()
+    turnout_percentage = (total_votes / total_registered_voters) * 100
+    print(f"\nVoter Turnout: {turnout_percentage:.2f}%")
+else:
+    print("\nNo data on registered voters available for turnout analysis.")
+
+# Identify the winner
+winner = candidate_votes.idxmax()
+print(f"\nWinner: {winner} with {candidate_votes[winner]} votes.")
